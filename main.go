@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
@@ -19,6 +20,18 @@ type Cell struct {
 type PageData struct {
 	GameTitle string
 	Rows      [][]Cell // The grid is now a slice of Cell slices
+}
+
+// Create a map of custom functions to use in the template.
+var funcMap = template.FuncMap{
+	// The "toJSON" function converts a Go value to a JSON string.
+	"toJSON": func(v interface{}) (template.JS, error) {
+		a, err := json.Marshal(v)
+		if err != nil {
+			return "", err
+		}
+		return template.JS(a), nil
+	},
 }
 
 // gridHandler parses URL parameters, creates the grid, and executes the template
@@ -57,7 +70,7 @@ func gridHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Parse our template file
-	tmpl, err := template.ParseFiles("template.html")
+	tmpl, err := template.New("template.html").Funcs(funcMap).ParseFiles("template.html")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

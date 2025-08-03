@@ -41,7 +41,9 @@
         <tbody>
             {{range .Rows}}
             <tr>
-                
+                <script>
+                    console.log({{ . | toJSON }});
+                </script>
                 {{range .}}
                 <td class="{{.Classes}}">{{.Value}}</td>
                 {{end}}
