@@ -17,7 +17,8 @@ type Cell struct {
 
 // PageData will hold the data for our template
 type PageData struct {
-	Rows [][]Cell // The grid is now a slice of Cell slices
+	GameTitle string
+	Rows      [][]Cell // The grid is now a slice of Cell slices
 }
 
 // gridHandler parses URL parameters, creates the grid, and executes the template
@@ -64,7 +65,8 @@ func gridHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Create the data structure to pass to the template
 	data := PageData{
-		Rows: grid,
+		GameTitle: fmt.Sprintf("%dx%d Grid", gridSize, gridSize),
+		Rows:      grid,
 	}
 
 	// Execute the template, passing it the data
